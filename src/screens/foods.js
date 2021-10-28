@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import styled from 'styled-components'
-import { useHistory } from 'react-router'
+import { useHistory, useParams } from 'react-router'
 import { FaSearch } from 'react-icons/fa'
 import Loader from '../components/loader'
 
 const FoodsList = props => {
+  const [value, setValue] = useState('')
+  const [filtered, setFiltered] = useState('')
   const [apiData, setApiData] = useState([])
   const [isLoading, setIsLoading] = useState(false)
 
@@ -19,7 +21,7 @@ const FoodsList = props => {
       }
     })
       .then(response => {
-        console.log('res', response)
+        // console.log('res', response)
       })
       .catch(error => {
         localStorage.removeItem('token')
@@ -39,7 +41,16 @@ const FoodsList = props => {
     })
   }, [])
 
+  useEffect(() => {
+    console.log('res : ', value)
+  }, [value])
+
   const history = useHistory()
+
+  //Search Function
+  const searchFood = e => {
+    setFiltered(e.target.value.toLowerCase())
+  }
 
   return (
     <>
@@ -49,29 +60,44 @@ const FoodsList = props => {
       ) : (
         <>
           <StyledHorizontal>
-            <SearchInput placeholder='What are you looking for?' />
+            <SearchInput
+              placeholder='What are you looking for?'
+              onChange={e => searchFood(e)}
+            />
             <SearchButton>
               <FaSearch />
             </SearchButton>
           </StyledHorizontal>
           <Wrapper>
-            {apiData?.map(item => (
-              <WrapperChild key={item?.idMeal}>
-                <Image
-                  src={item?.strMealThumb}
-                  alt={item?.strMealThumb}
-                ></Image>
-                <Title>{item?.strMeal}</Title>
-                <StyledHorizontal>
-                  <StyledButton>Add to favoris</StyledButton> &nbsp;
-                  <StyledButton
-                    onClick={() => history.push(`/details/${item?.idMeal}`)}
-                  >
-                    See the details
-                  </StyledButton>
-                </StyledHorizontal>
-              </WrapperChild>
-            ))}
+            {apiData?.map(item => {
+              console.log(typeof filtered)
+              return (
+                <div key={item?.idMeal}>
+                  {item.strMeal.toLowerCase().includes(filtered) ? (
+                    <WrapperChild>
+                      <Image
+                        src={item?.strMealThumb}
+                        alt={item?.strMealThumb}
+                      ></Image>
+                      <Title>{item?.strMeal}</Title>
+                      <StyledHorizontal>
+                        <StyledButton
+                          onClick={() =>
+                            history.push(`/details/${item?.idMeal}`)
+                          }
+                        >
+                          See the details
+                        </StyledButton>
+                      </StyledHorizontal>
+                    </WrapperChild>
+                  ) : (
+                    ''
+                  )}
+                </div>
+              )
+            })}
+            {/* Search food not found */}
+            {apiData[0] ? <StyledTitle>Food not found</StyledTitle> : null}
           </Wrapper>
         </>
       )}
@@ -145,9 +171,9 @@ const SearchButton = styled.button`
 `
 
 const StyledButton = styled.button`
-  padding: 5px 10px;
+  padding: 15px 20px;
   color: ${({ theme }) => theme.primaryDark};
-  font-size: 10px;
+  font-size: 16px;
   text-decoration: none;
   text-transform: uppercase;
   overflow: hidden;

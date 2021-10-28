@@ -29,6 +29,10 @@ const Favorites = props => {
             </StyledHorizontal>
           </WrapperChild>
         ))}
+        {/* If no favorites */}
+        {favorite.length === 0 ? (
+          <StyledTitle>No Favorites Foods</StyledTitle>
+        ) : null}
       </Wrapper>
     </>
   )

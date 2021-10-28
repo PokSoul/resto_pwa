@@ -3,11 +3,13 @@ import PropTypes from 'prop-types'
 import axios from 'axios'
 import styled from 'styled-components'
 import { useParams } from 'react-router'
+import Loader from '../components/loader'
 
 const FoodDetails = props => {
   const { id } = useParams()
   const idMeal = id
   const [details, setDetails] = useState({})
+  const [isLoading, setIsLoading] = useState(false)
   const [favorites, setFavorites] = useState(
     localStorage.getItem('favorites')
       ? JSON.parse(localStorage.getItem('favorites'))
@@ -26,12 +28,14 @@ const FoodDetails = props => {
   }
 
   useEffect(() => {
+    setIsLoading(true)
     axios({
       method: 'GET',
       url: 'https://www.themealdb.com/api/json/v1/1/lookup.php?i=' + `${idMeal}`
     }).then(response => {
       // console.log(response.data.meals[0])
       setDetails(response.data.meals[0])
+      setIsLoading(false)
     })
   }, [])
 
@@ -54,33 +58,37 @@ const FoodDetails = props => {
   return (
     <div>
       <StyledTitle>Food Details</StyledTitle>
-      <Wrapper>
-        <WrapperChild>
-          <Title>{details.strMeal}</Title>
-          <Image src={details.strMealThumb} alt={details.strMealThumb} />
-          <Title> Ingredients : </Title>
-          <Description>
-            {details.strIngredient1},{details.strIngredient2},
-            {details.strIngredient3},{details.strIngredient4},
-            {details.strIngredient5},{details.strIngredient6}
-          </Description>
-          <Title> Instructions: </Title>
-          <Description>{details.strInstructions}</Description>
-          <StyledHorizontal>
-            <StyledButton
-              onClick={() => {
-                handleFavorite(details)
-              }}
-            >
-              {isFavorite ? 'remove from favorite' : 'add to favorite'}
-            </StyledButton>
-            &nbsp;
-            <StyledButton onClick={() => window.open(details?.strYoutube)}>
-              Watch the recipe
-            </StyledButton>
-          </StyledHorizontal>
-        </WrapperChild>
-      </Wrapper>
+      {isLoading ? (
+        <Loader></Loader>
+      ) : (
+        <Wrapper>
+          <WrapperChild>
+            <Title>{details.strMeal}</Title>
+            <Image src={details.strMealThumb} alt={details.strMealThumb} />
+            <Title> Ingredients : </Title>
+            <Description>
+              {details.strIngredient1},{details.strIngredient2},
+              {details.strIngredient3},{details.strIngredient4},
+              {details.strIngredient5},{details.strIngredient6}
+            </Description>
+            <Title> Instructions: </Title>
+            <Description>{details.strInstructions}</Description>
+            <StyledHorizontal>
+              <StyledButton
+                onClick={() => {
+                  handleFavorite(details)
+                }}
+              >
+                {isFavorite ? 'remove from favorite' : 'add to favorite'}
+              </StyledButton>
+              &nbsp;
+              <StyledButton onClick={() => window.open(details?.strYoutube)}>
+                Watch the recipe
+              </StyledButton>
+            </StyledHorizontal>
+          </WrapperChild>
+        </Wrapper>
+      )}
     </div>
   )
 }
