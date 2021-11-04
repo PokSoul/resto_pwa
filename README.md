@@ -3,4 +3,4 @@
 MEECHAI Vincent
  
 
- Site de restauration + affichage menu + barre de recherche + favoris
+ Site de restauration (recherche de bouffe) + affichage menu + barre de recherche + favoris
