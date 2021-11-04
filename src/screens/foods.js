@@ -35,14 +35,14 @@ const FoodsList = props => {
       method: 'GET',
       url: 'https://www.themealdb.com/api/json/v1/1/search.php?f=b  '
     }).then(response => {
-      console.log('res : ', response.data.meals)
+      //console.log('res : ', response.data.meals)
       setApiData(response.data.meals)
       setIsLoading(false)
     })
   }, [])
 
   useEffect(() => {
-    console.log('res : ', value)
+    // console.log('res : ', value)
   }, [value])
 
   const history = useHistory()
@@ -70,7 +70,6 @@ const FoodsList = props => {
           </StyledHorizontal>
           <Wrapper>
             {apiData?.map(item => {
-              console.log(typeof filtered)
               return (
                 <div key={item?.idMeal}>
                   {item.strMeal.toLowerCase().includes(filtered) ? (

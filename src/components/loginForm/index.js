@@ -25,7 +25,7 @@ const FormLogin = props => {
       url: 'https://easy-login-api.herokuapp.com/users/login',
       data: { username: username, password: password }
     }).then(response => {
-      console.log(response.headers['x-access-token'])
+      // console.log(response.headers['x-access-token'])
       localStorage.setItem('token', response.headers['x-access-token'])
 
       history.push('/foods')

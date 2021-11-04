@@ -19,7 +19,7 @@ const FoodDetails = props => {
 
   useEffect(() => {
     isInFavorite(idMeal)
-    console.log(idMeal)
+    //console.log(idMeal)
   }, [favorites])
 
   const isInFavorite = idMeal => {
